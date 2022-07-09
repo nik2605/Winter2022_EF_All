@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UserManagementModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Address" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="City" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="PostalCode" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="ProvinceID" Type="int" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="Age" Type="int" />
+    <Property Name="EmailID" Type="varchar" MaxLength="25" />
+    <Property Name="Gender" Type="varchar" MaxLength="25" />
+    <Property Name="AddressID" Type="int" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="ProvinceID" />
+    </Key>
+    <Property Name="ProvinceID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProvinceName" Type="varchar" MaxLength="25" />
+    <Property Name="ProvinceAbbreviation" Type="varchar" MaxLength="25" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="200" />
+    <Property Name="LastName" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'UserManagement.dbo.PersonSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="PersonSummary">
+    <Key>
+      <PropertyRef Name="PersonID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+    </Key>
+    <Property Name="PersonID" Type="int" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="LastName" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="Age" Type="int" />
+    <Property Name="EmailID" Type="varchar" MaxLength="25" />
+    <Property Name="Gender" Type="varchar" MaxLength="25" />
+    <Property Name="AddressID" Type="int" />
+    <Property Name="Address" Type="varchar" MaxLength="25" />
+    <Property Name="City" Type="varchar" MaxLength="25" />
+    <Property Name="PostalCode" Type="varchar" MaxLength="25" />
+    <Property Name="ProvinceName" Type="varchar" MaxLength="25" />
+    <Property Name="ProvinceAbbreviation" Type="varchar" MaxLength="25" />
+  </EntityType>
+  <Association Name="FK__Address__Provinc__31EC6D26">
+    <End Role="Province" Type="Self.Province" Multiplicity="0..1" />
+    <End Role="Address" Type="Self.Address" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Province">
+        <PropertyRef Name="ProvinceID" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="ProvinceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Person__AddressI__34C8D9D1">
+    <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AddressID" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="AddressID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="GetPersons" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PersonID" Type="int" Mode="In" />
+    <Parameter Name="FirstName" Type="varchar" Mode="InOut" />
+    <Parameter Name="LastName" Type="varchar" Mode="InOut" />
+    <Parameter Name="Age" Type="int" Mode="InOut" />
+    <Parameter Name="EmailID" Type="varchar" Mode="InOut" />
+    <Parameter Name="Gender" Type="varchar" Mode="InOut" />
+    <Parameter Name="AddressID" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="GetUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserId" Type="int" Mode="In" />
+    <Parameter Name="FirstName" Type="varchar" Mode="InOut" />
+    <Parameter Name="LastName" Type="varchar" Mode="InOut" />
+  </Function>
+  <EntityContainer Name="UserManagementModelStoreContainer">
+    <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PersonSummary" EntityType="Self.PersonSummary" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [PersonSummary].[PersonID] AS [PersonID], 
+    [PersonSummary].[FirstName] AS [FirstName], 
+    [PersonSummary].[LastName] AS [LastName], 
+    [PersonSummary].[Age] AS [Age], 
+    [PersonSummary].[EmailID] AS [EmailID], 
+    [PersonSummary].[Gender] AS [Gender], 
+    [PersonSummary].[AddressID] AS [AddressID], 
+    [PersonSummary].[Address] AS [Address], 
+    [PersonSummary].[City] AS [City], 
+    [PersonSummary].[PostalCode] AS [PostalCode], 
+    [PersonSummary].[ProvinceName] AS [ProvinceName], 
+    [PersonSummary].[ProvinceAbbreviation] AS [ProvinceAbbreviation]
+    FROM [dbo].[PersonSummary] AS [PersonSummary]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__Address__Provinc__31EC6D26" Association="Self.FK__Address__Provinc__31EC6D26">
+      <End Role="Province" EntitySet="Province" />
+      <End Role="Address" EntitySet="Address" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Person__AddressI__34C8D9D1" Association="Self.FK__Person__AddressI__34C8D9D1">
+      <End Role="Address" EntitySet="Address" />
+      <End Role="Person" EntitySet="Person" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

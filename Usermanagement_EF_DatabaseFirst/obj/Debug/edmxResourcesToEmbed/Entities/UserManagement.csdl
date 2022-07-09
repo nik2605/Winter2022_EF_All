@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="UserManagementModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="AddressID" />
+    </Key>
+    <Property Name="AddressID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Address1" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PostalCode" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ProvinceID" Type="Int32" />
+    <NavigationProperty Name="Province" Relationship="Self.FK__Address__Provinc__31EC6D26" FromRole="Address" ToRole="Province" />
+    <NavigationProperty Name="People" Relationship="Self.FK__Person__AddressI__34C8D9D1" FromRole="Address" ToRole="Person" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonID" />
+    </Key>
+    <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Age" Type="Int32" />
+    <Property Name="EmailID" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="Gender" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="AddressID" Type="Int32" />
+    <NavigationProperty Name="Address" Relationship="Self.FK__Person__AddressI__34C8D9D1" FromRole="Person" ToRole="Address" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="ProvinceID" />
+    </Key>
+    <Property Name="ProvinceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProvinceName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="ProvinceAbbreviation" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Addresses" Relationship="Self.FK__Address__Provinc__31EC6D26" FromRole="Province" ToRole="Address" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="PersonSummary">
+    <Key>
+      <PropertyRef Name="PersonID" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+    </Key>
+    <Property Name="PersonID" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LastName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Age" Type="Int32" />
+    <Property Name="EmailID" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="Gender" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="AddressID" Type="Int32" />
+    <Property Name="Address" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="City" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="PostalCode" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="ProvinceName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="ProvinceAbbreviation" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <Association Name="FK__Address__Provinc__31EC6D26">
+    <End Role="Province" Type="Self.Province" Multiplicity="0..1" />
+    <End Role="Address" Type="Self.Address" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Province">
+        <PropertyRef Name="ProvinceID" />
+      </Principal>
+      <Dependent Role="Address">
+        <PropertyRef Name="ProvinceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Person__AddressI__34C8D9D1">
+    <End Role="Address" Type="Self.Address" Multiplicity="0..1" />
+    <End Role="Person" Type="Self.Person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AddressID" />
+      </Principal>
+      <Dependent Role="Person">
+        <PropertyRef Name="AddressID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="UserManagementEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Addresses" EntityType="Self.Address" />
+    <EntitySet Name="People" EntityType="Self.Person" />
+    <EntitySet Name="Provinces" EntityType="Self.Province" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="PersonSummaries" EntityType="Self.PersonSummary" />
+    <AssociationSet Name="FK__Address__Provinc__31EC6D26" Association="Self.FK__Address__Provinc__31EC6D26">
+      <End Role="Province" EntitySet="Provinces" />
+      <End Role="Address" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Person__AddressI__34C8D9D1" Association="Self.FK__Person__AddressI__34C8D9D1">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="Person" EntitySet="People" />
+    </AssociationSet>
+    <FunctionImport Name="GetPersons" ReturnType="Collection(UserManagementModel.GetPersons_Result)">
+      <Parameter Name="PersonID" Mode="In" Type="Int32" />
+      <Parameter Name="FirstName" Mode="InOut" Type="String" />
+      <Parameter Name="LastName" Mode="InOut" Type="String" />
+      <Parameter Name="Age" Mode="InOut" Type="Int32" />
+      <Parameter Name="EmailID" Mode="InOut" Type="String" />
+      <Parameter Name="Gender" Mode="InOut" Type="String" />
+      <Parameter Name="AddressID" Mode="InOut" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="GetUser">
+      <Parameter Name="UserId" Mode="In" Type="Int32" />
+      <Parameter Name="FirstName" Mode="InOut" Type="String" />
+      <Parameter Name="LastName" Mode="InOut" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="GetPersons_Result">
+    <Property Type="Int32" Name="PersonID" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="true" MaxLength="25" />
+    <Property Type="String" Name="LastName" Nullable="true" MaxLength="25" />
+    <Property Type="Int32" Name="Age" Nullable="true" />
+    <Property Type="String" Name="EmailID" Nullable="true" MaxLength="25" />
+    <Property Type="String" Name="Gender" Nullable="true" MaxLength="25" />
+    <Property Type="Int32" Name="AddressID" Nullable="true" />
+  </ComplexType>
+</Schema>
